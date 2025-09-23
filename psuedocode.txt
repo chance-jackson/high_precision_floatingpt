@@ -1,1 +1,21 @@
-bahbahbah
+Psuedocode Text:
+
+1) We plan to represent a 128-bit number as two 64-bit numbers, where the first 64-bit number is used to represent all the digits before the decimal place, and the second is used to represent all the digits after.
+
+2) Arithmetic operations would then be implemented place-wise, i.e all operations would be done individually on each 64-bit number.
+
+Psuedocode:
+	
+	def 128-bit(number):
+		number_split = number.astype(str).split(".")
+		before_decimal = float64(number_split[0])
+		after_decimal = float64(number_split[1])
+
+		return before_decimal, after_decimal
+
+	def arithmetic(number):
+		run 128-bit
+		before_out = before_decimal_1 *+-/ before_decimal_2
+		after_out = after_decimal_1 *+-/ after_decimal_2
+
+		return before_out, after_out
