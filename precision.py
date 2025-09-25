@@ -12,6 +12,25 @@ class Precision():
             dec = 0
         return(numer, dec)
     
+    def join(self, parts):
+        return str(parts[0]) + "." + str(parts[1])
+    
     def __add__(self, other):
         a_num, a_dec = self.splitting()
         b_num, b_dec = other.splitting()
+
+        #  same length
+        max_len = max(len(str(a_dec)), len(str(b_dec)))
+        a_dec = str(a_dec).ljust(max_len, "0")
+        b_dec = str(b_dec).ljust(max_len, "0")
+
+        # add decimals
+        dec_sum = int(a_dec) + int(b_dec)
+        carry, dec_result = divmod(dec_sum, 10**max_len)
+
+        # add integers + carry
+        int_sum = int(a_num) + int(b_num) + carry
+
+        # join back
+        return self.join((int_sum, str(dec_result).zfill(max_len)))
+
