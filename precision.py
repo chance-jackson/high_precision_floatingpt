@@ -1,3 +1,5 @@
+import numpy as np
+
 class Precision():
     def __init__(self, num):
         self.num = num
@@ -48,7 +50,7 @@ class Precision():
         carry, dec_result = divmod(dec_sum, 10**max_len)
 
         # sub integers - carry
-        int_sum = int(a_num) - int(b_num) - carry
+        int_sum = int(a_num) - int(b_num) - np.abs(carry)
 
         # join back
         return self.join((int_sum, str(dec_result).zfill(max_len)))
