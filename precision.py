@@ -47,8 +47,8 @@ class Precision():
         dec_sum = int(a_dec) - int(b_dec)
         carry, dec_result = divmod(dec_sum, 10**max_len)
 
-        # add integers - carry
-        int_sum = int(a_num) + int(b_num) - carry
+        # sub integers - carry
+        int_sum = int(a_num) - int(b_num) - carry
 
         # join back
         return self.join((int_sum, str(dec_result).zfill(max_len)))
