@@ -54,5 +54,13 @@ class Precision():
 
         # join back
         return self.join((int_sum, str(dec_result).zfill(max_len)))
-
     
+    def __eq__(self, other):
+        a_num, a_dec = self.splitting() #split numbers
+        b_num, b_dec = other.splitting()
+        
+        #easiest to use in-built fltpt comparison
+        if a_num != b_num or a_dec != b_dec:   #if either num or dec don't match
+            return False                       #numbers dont match
+        else:
+            return True                        #else: true
