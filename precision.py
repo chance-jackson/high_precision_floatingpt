@@ -37,24 +37,78 @@ class Precision():
         return self.join((int_sum, str(dec_result).zfill(max_len)))
 
     def __sub__(self, other):
-        a_num, a_dec = self.splitting()
-        b_num, b_dec = other.splitting()
+        # ... (same length setup) ...
+        # ... (a_dec, b_dec are zero-padded strings) ...
 
-        #  same length
-        max_len = max(len(str(a_dec)), len(str(b_dec)))
-        a_dec = str(a_dec).ljust(max_len, "0")
-        b_dec = str(b_dec).ljust(max_len, "0")
+        a_num, a_dec = self.splitting()  #10.02 ===10 and 2
+        b_num, b_dec = other.splitting()  #9.50 === 9 and 50 
+
+        a_dec_int = int(a_dec)  
+        b_dec_int = int(b_dec)
+
+        max_len = max(len(str(a_dec)), len(str(b_dec))) #len = 2, len(50) = 2
 
         # sub decimals
-        dec_sum = int(a_dec) - int(b_dec)
-        carry, dec_result = divmod(dec_sum, 10**max_len)
+        dec_diff = a_dec_int - b_dec_int #difference = 48 
+        
+        # carry will be 0 (no borrow) or -1 (borrow)
+        carry = dec_diff // (10**max_len) #integer division, 48 divided by 100, gives me 0.
+        dec_result = dec_diff % (10**max_len) #dec_result = 48 modulus 100 gives us 48 
 
-        # sub integers - carry
-        int_sum = int(a_num) - int(b_num) - np.abs(carry)
+        # sub integers + the carry (which is 0 or -1)
+        int_sum = int(a_num) - int(b_num) + carry # carry should usually be zero 
 
         # join back
         return self.join((int_sum, str(dec_result).zfill(max_len)))
+
+    def _mult_(self, other): 
+        a_num, a_dec = self.splitting() #10.02 ---10, 2
+        b_num, b_dec = other.splitting() #9.50 ---9, 50 
+
+        # total digits after decimal
+        total_dec = len(str(a_dec)) + len(str(b_dec)) # finds total digits in dec,=> len(a_dec) + len(b_dec) 1 + 2 = 3 
+
+        # make whole integers
+        a_whole = int(str(a_num) + str(a_dec)) #makes 10.02, 1002
+        b_whole = int(str(b_num) + str(b_dec))
+
+        # multiply
+        prod = a_whole * b_whole
+        prod_str = str(prod).zfill(total_dec + 1)
+
+        # split back
+        int_part = prod_str[:-total_dec] if total_dec else prod_str #converts back to decimal places 
+        dec_part = prod_str[-total_dec:] if total_dec else "0"
+
+        return self.join((int(int_part), dec_part))
     
+    
+    def __div__(self, other, precision=10):
+        a_num, a_dec = self.splitting()
+        b_num, b_dec = other.splitting()
+
+        # scale to integers
+        a_whole = int(str(a_num) + str(a_dec))
+        b_whole = int(str(b_num) + str(b_dec))
+
+        # adjust scaling factors
+        scale = 10 ** max(len(str(a_dec)), len(str(b_dec)))
+        a_scaled = a_whole * scale
+        b_scaled = b_whole
+
+        # do integer division
+        quotient = a_scaled // b_scaled
+        remainder = a_scaled % b_scaled
+
+        # build decimal part manually
+        dec_digits = []
+        for _ in range(precision):
+            remainder *= 10
+            dec_digit, remainder = divmod(remainder, b_scaled)
+            dec_digits.append(str(dec_digit))
+
+        return self.join((quotient, "".join(dec_digits)))
+
     def __eq__(self, other):
         a_num, a_dec = self.splitting() #split numbers
         b_num, b_dec = other.splitting()
