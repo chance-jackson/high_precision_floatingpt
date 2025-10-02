@@ -64,3 +64,22 @@ class Precision():
             return False                       #numbers dont match
         else:
             return True                        #else: true
+    
+    def __gt__(self, other):
+        a_num, a_dec = self.splitting() #split numbers
+        b_num, b_dec = other.splitting()
+
+        if a_num > b_num or a_dec > b_dec:
+            return True
+        else:
+            return False
+
+    def __lt__(self, other):
+        a_num, a_dec = self.splitting() #split numbers
+        b_num, b_dec = other.splitting()
+
+        if a_num < b_num or a_dec < b_dec:
+            return True
+        else:
+            return False
+
