@@ -27,7 +27,7 @@ def merge(left :list , right:list) -> list:
     merged_list = [] 
     i = j = 0 # pointers here
 
-    while i < left and j < right: 
+    while i < len(left) and j < len(right): 
         if left[i] < right[j]: 
             merged_list.append(left[i])
             i = i + 1 #increment the counter to check the next number
