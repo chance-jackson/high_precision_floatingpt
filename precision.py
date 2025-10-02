@@ -12,7 +12,7 @@ class Precision():
             dec = parts[1]
         else:
             dec = 0
-        return(numer, dec)
+        return(int(numer), int(dec))
     
     def join(self, parts):
         return str(parts[0]) + "." + str(parts[1])
@@ -68,8 +68,10 @@ class Precision():
     def __gt__(self, other):
         a_num, a_dec = self.splitting() #split numbers
         b_num, b_dec = other.splitting()
-
-        if a_num > b_num or a_dec > b_dec:
+        
+        if a_num > b_num:              
+            return True
+        elif a_num == b_num and a_dec > b_dec:
             return True
         else:
             return False
@@ -78,8 +80,14 @@ class Precision():
         a_num, a_dec = self.splitting() #split numbers
         b_num, b_dec = other.splitting()
 
-        if a_num < b_num or a_dec < b_dec:
+        if a_num < b_num:
+            return True
+        if a_num == b_num and a_dec < b_dec:
             return True
         else:
             return False
 
+    def __str__(self):
+        a_num, a_dec = self.splitting() #split number, get two floating pt reps
+
+        return str(a_num) + '.' + str(a_dec) #return concatenated string
