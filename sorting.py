@@ -22,3 +22,41 @@ A = [p(randint(-100,100)) for i in range(0,5)] #list of random numbers between -
 
 out = bubble_sort(A)                        #sort da list
 print([str(out[i]) for i in range(len(A))]) #print out string representations
+
+def merge(left :list , right:list) -> list: 
+    merged_list = [] 
+    i = j = 0 # pointers here
+
+    while i < left and j < right: 
+        if left[i] < right[j]: 
+            merged_list.append(left[i])
+            i = i + 1 #increment the counter to check the next number
+        else: 
+            merged_list.append(right[j])
+            j = j + 1 #same as for i case
+    
+    # Appends the last item 
+    #one becomes exhausted
+    merged_list.extend(left[i:])
+    merged_list.extend(right[j:])
+
+    return merged_list
+
+        
+        
+
+def merge_sort(arr: list) -> list: 
+    """
+    len of the list, divide by two, divides elements into two, do recursion, and compare when len is 1, then work back. 
+    """
+
+    if len(arr) <=1: 
+        return arr #one element and hence sorted
+    mid = len(arr) // 2 
+    left = arr[:mid] 
+    right = arr[mid:]
+
+    left = merge_sort(left)
+    right = merge_sort(right)
+
+    return merge(left, right)
